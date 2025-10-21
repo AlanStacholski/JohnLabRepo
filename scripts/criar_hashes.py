@@ -2,7 +2,7 @@ import bcrypt
 import hashlib
 import os
 
-# --- 1. Lista de Senhas Simples ---
+#Definindo senhas simples
 senhas_simples = [
     "senha123",
     "john123",
@@ -11,7 +11,7 @@ senhas_simples = [
     "password"
 ]
 
-# --- 2. Geração de Hashes e Arquivos ---
+# Gerar os arquivos e hashes
 nome_arquivo_hashes = "hashes.txt"
 nome_arquivo_wordlist = "wordlist.txt"
 
@@ -23,19 +23,19 @@ try:
         for i, senha in enumerate(senhas_simples):
             senha_bytes = senha.encode('utf-8')
 
-            # 2.1. Hash Bcrypt (Para ser quebrado pelo JTR)
+            # Hashes com BCrypt
             # Fator de custo baixo (rounds=4) para acelerar a demonstração
             salt = bcrypt.gensalt(rounds=4) 
             hash_bcrypt_completo = bcrypt.hashpw(senha_bytes, salt).decode('utf-8')
 
-            # 2.2. Hash MD5 (Apenas para demonstração e listagem)
+            # Hash com MD5 
             hash_md5 = hashlib.md5(senha_bytes).hexdigest()
 
-            # 2.3. Gravar Hash no Formato JTR: "username:hash"
+            # Gravar Hash no Formato JTR: "username:hash"
             linha_jtr = f"usuario{i + 1}:{hash_bcrypt_completo}\n"
             f_hashes.write(linha_jtr)
 
-            # 2.4. Gravar a senha na Wordlist
+            # Gravar a senha na Wordlist
             f_wordlist.write(f"{senha}\n")
             
             print(f"Gerado: usuario{i + 1} (Bcrypt: {hash_bcrypt_completo[:10]}... | MD5: {hash_md5})")
